@@ -1,4 +1,4 @@
-defmodule RTP.Sentiments do
+defmodule Model.Sentiments do
   def get(word) do
     values = %{
       abandon: -2,

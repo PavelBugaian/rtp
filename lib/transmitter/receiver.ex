@@ -1,4 +1,4 @@
-defmodule Transmitter.Receiver do
+defmodule Transmitter.WorkerService do
   use GenServer
   require Logger
 

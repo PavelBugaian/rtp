@@ -3,7 +3,9 @@ defmodule Server do
 
   def accept(port) do
     {:ok, socket} = :gen_tcp.listen(port, [:binary, packet: :line, active: false, reuseaddr: true])
+
     Logger.info "Server can now accept connections to #{port}"
+
     loop_acceptor(socket)
   end
 

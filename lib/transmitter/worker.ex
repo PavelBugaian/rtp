@@ -34,7 +34,17 @@ defmodule Transmitter.Worker do
   end
 
   defp handle_success(content) do
-    content["message"]["tweet"]["text"]
+    message = content["message"]["tweet"]["text"]
+    message_score = ScoreAnalyzer.get_score(message)
+
+    handled_message = %{
+      tweet: content["message"]["tweet"],
+      score: message_score
+    }
+
+    TweetService.add_tweet(handled_message)
+
+    message
   end
 
   defp handle_error(error) do

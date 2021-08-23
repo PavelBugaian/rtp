@@ -18,7 +18,8 @@ defmodule Transmitter.ConnectionItem do
   defp recv(subscriber) do
     receive do
       tweet ->
-        Transmitter.Receiver.route(tweet.data, subscriber)
+        Transmitter.Counter.log_request()
+        Transmitter.WorkerService.route(tweet.data, subscriber)
     end
     recv(subscriber)
   end
