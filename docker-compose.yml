@@ -1,25 +1,13 @@
 version: "3.6"
 services:
-  # mongodb:
-  #   image: mongo
-  #   ports:
-  #     - 27013:27017
 
-  server:
+  twitter_api:
     image: alexburlacu/rtp-server:faf18x
     ports:
       - 4000:4000
 
-  broker:
+  rtp:
     build:
-      context: broker
+      context: .
     ports:
       - 6666:6666
-
-  analyzer:
-    build:
-      context: analyzer
-
-    depends_on:
-      - server
-      - broker
