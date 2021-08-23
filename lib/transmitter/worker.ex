@@ -14,6 +14,7 @@ defmodule Transmitter.Worker do
     content = case serialize(data) do
       {:ok, content} -> handle_success(content)
       {:error, error} -> handle_error(error)
+      {:panic_message, error} -> error
     end
 
     Server.write_line(subscriber, {:for_subscriber, content})
@@ -22,9 +23,13 @@ defmodule Transmitter.Worker do
   end
 
   defp serialize(data) do
-    case JSON.decode(data) do
-      {:ok, content} -> {:ok, content}
-      {:error, error} -> handle_error(error)
+    if data != "{\"message\": panic}" do
+      case JSON.decode(data) do
+        {:ok, content} -> {:ok, content}
+        {:error, error} -> handle_error(error)
+      end
+    else
+      {:panic_message, "Kill message ignored"}
     end
   end
 
