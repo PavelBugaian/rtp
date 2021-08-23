@@ -7,6 +7,8 @@ defmodule Rtp.Application do
       Supervisor.child_spec({Task, fn -> Server.Registry.start end}, id: Registry),
       {Task.Supervisor, name: Server.TaskSupervisor},
       {DynamicSupervisor, name: ConnectionSupervisor, strategy: :one_for_one},
+      {Transmitter.Receiver, name: Transmitter.Receiver},
+      {DynamicSupervisor, name: WorkerDynamicSupervisor, strategy: :one_for_one},
       Supervisor.child_spec({Task, fn -> Server.accept(6666) end}, id: Server)
     ]
 

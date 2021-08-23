@@ -3,8 +3,6 @@ defmodule Server.Registry do
   require Logger
 
   def start() do
-    Logger.info "#{__MODULE__} STARTED"
-
     GenServer.start_link(__MODULE__, [], name: __MODULE__)
   end
 
@@ -17,12 +15,12 @@ defmodule Server.Registry do
     if topic == "tweeter" do
       DynamicSupervisor.start_child(
         ConnectionSupervisor,
-        {Transmitter.ConnectionItem, url: "127.0.0.1:4000/tweets/1"}
+        {Transmitter.ConnectionItem, url: "127.0.0.1:4000/tweets/1", subscriber: subscriber}
       )
 
       DynamicSupervisor.start_child(
         ConnectionSupervisor,
-        {Transmitter.ConnectionItem, url: "127.0.0.1:4000/tweets/2"}
+        {Transmitter.ConnectionItem, url: "127.0.0.1:4000/tweets/2", subscriber: subscriber}
       )
 
     else
@@ -30,8 +28,8 @@ defmodule Server.Registry do
     end
   end
 
-  def get_all() do
-    GenServer.cast(__MODULE__, {:get_all})
+  def get_all_subscribers() do
+    GenServer.cast(__MODULE__, {:get_all_subscribers})
   end
 
   def get_subscribers_by_topic(topic) do
@@ -44,7 +42,7 @@ defmodule Server.Registry do
   end
 
   @impl true
-  def handle_cast({:get_all}, state) do
+  def handle_cast({:get_all_subscribers}, state) do
     {:noreply, state}
   end
 

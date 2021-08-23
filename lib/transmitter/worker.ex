@@ -1,5 +1,6 @@
 defmodule Transmitter.Worker do
   use GenServer
+  require Logger
 
   def start_link(opts) do
     GenServer.start_link(__MODULE__, :ok, opts)
@@ -9,17 +10,21 @@ defmodule Transmitter.Worker do
     {:ok, %{}}
   end
 
-  def handle(data) do
-    case serialize(data) do
+  def handle(data, subscriber) do
+    content = case serialize(data) do
       {:ok, content} -> handle_success(content)
-      {:error} -> handle_error()
+      {:error, error} -> handle_error(error)
     end
+
+    Server.write_line(subscriber, {:for_subscriber, content})
+
+    content
   end
 
   defp serialize(data) do
     case JSON.decode(data) do
       {:ok, content} -> {:ok, content}
-      {:error, _} -> handle_error()
+      {:error, error} -> handle_error(error)
     end
   end
 
@@ -27,7 +32,9 @@ defmodule Transmitter.Worker do
     content["message"]["tweet"]["text"]
   end
 
-  defp handle_error() do
-    {:error}
+  defp handle_error(error) do
+    Logger.debug "#{error}"
+
+    {:error, error}
   end
 end

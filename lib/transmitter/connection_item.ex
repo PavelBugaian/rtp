@@ -3,25 +3,23 @@ defmodule Transmitter.ConnectionItem do
   require Logger
 
   def start_link(opts) do
-
-    Logger.info "Transmitter.ConnectionItem start_link"
-
-    {url} = parse_options(opts)
+    {url, subscriber} = parse_options(opts)
     EventsourceEx.new(url, stream_to: self())
-    recv()
+    recv(subscriber)
   end
 
   defp parse_options(opts) do
     url = opts[:url]
-    {url}
+    subscriber = opts[:subscriber]
+
+    {url, subscriber}
   end
 
-  defp recv() do
+  defp recv(subscriber) do
     receive do
       tweet ->
-        Logger.info "#{tweet.data}"
-        Transmitter.Worker.handle(tweet.data)
+        Transmitter.Receiver.route(tweet.data, subscriber)
     end
-    recv()
+    recv(subscriber)
   end
 end
