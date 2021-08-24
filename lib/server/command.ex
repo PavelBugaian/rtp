@@ -19,7 +19,7 @@ defmodule Server.Command do
   end
 
   def run({:subscribe, topic}, socket) do
-    Server.Registry.add_subscriber(topic, socket)
+    Server.PubSubController.add_subscriber(topic, socket)
 
     {:ok, "Successfully subscribed to #{topic}\r\n"}
   end

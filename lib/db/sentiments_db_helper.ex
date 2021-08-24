@@ -17,7 +17,7 @@ defmodule SentimentsDatabase do
 
   @impl true
   def handle_cast({:post_tweets, tweets}, connection) do
-    {:ok. _} = Mongo.insert_many(connection, "tweets", tweets)
+    Mongo.insert_many(connection, "tweets", tweets)
 
     {:noreply, connection}
   end

@@ -21,10 +21,10 @@ defmodule Server do
   end
 
   defp serve(socket) do
-    msg =
-      with {:ok, data} <- read_line(socket),
-           {:ok, command} <- Server.Command.parse(data),
-           do: Server.Command.run(command, socket)
+    {:ok, data} = read_line(socket)
+    {:ok, command} = Server.Command.parse(data)
+
+    msg = Server.Command.run(command, socket)
 
     write_line(socket, msg)
     serve(socket)

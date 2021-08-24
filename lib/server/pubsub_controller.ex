@@ -1,4 +1,4 @@
-defmodule Server.Registry do
+defmodule Server.PubSubController do
   use GenServer
   require Logger
 
@@ -22,7 +22,6 @@ defmodule Server.Registry do
         ConnectionSupervisor,
         {Transmitter.ConnectionItem, url: "127.0.0.1:4000/tweets/2", subscriber: subscriber}
       )
-
     else
       GenServer.cast(__MODULE__, {:add, topic, subscriber})
     end

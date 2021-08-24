@@ -4,7 +4,7 @@ defmodule Rtp.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      Supervisor.child_spec({Task, fn -> Server.Registry.start end}, id: Registry),
+      Supervisor.child_spec({Task, fn -> Server.PubSubController.start end}, id: Registry),
       {Task.Supervisor, name: Server.TaskSupervisor},
       {DynamicSupervisor, name: ConnectionSupervisor, strategy: :one_for_one},
       {Transmitter.WorkerService, name: Transmitter.WorkerService},
