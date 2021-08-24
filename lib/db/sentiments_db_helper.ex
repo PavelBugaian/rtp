@@ -12,12 +12,12 @@ defmodule SentimentsDatabase do
 
   @impl true
   def init(:ok) do
-    {:ok, connection} = Mongo.start_link(database: "rtp", url: "mongodb://127.0.0.1:27017")
+    {:ok, connection} = Mongo.start_link(database: "rtp", url: "mongodb://localhost:27017")
   end
 
   @impl true
   def handle_cast({:post_tweets, tweets}, connection) do
-    Mongo.insert_many(connection, "tweets", tweets)
+    {:ok. _} = Mongo.insert_many(connection, "tweets", tweets)
 
     {:noreply, connection}
   end

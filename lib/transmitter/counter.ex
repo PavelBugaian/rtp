@@ -21,6 +21,7 @@ defmodule Transmitter.Counter do
   @impl true
   def handle_cast({:refresh}, count) do
     Transmitter.Autoscaler.set_count(count)
+    TweetService.tick(count)
     loop()
     {:noreply, 0}
   end

@@ -18,12 +18,12 @@ defmodule TweetService do
     tweets = []
     length = 0
     max_length = 128
+
     {:ok, {tweets, length, max_length}}
   end
 
   @impl true
   def handle_cast({:tick, count}, {tweets, length, max_length}) do
-    max_length = count / (max_length + 1)
     new_state = send(tweets, length, max_length)
     {tweets, length, _max_length} = new_state
     {:noreply, {tweets, length, max_length}}
@@ -41,7 +41,6 @@ defmodule TweetService do
 
     {:noreply, {tweets, length, max_length}}
   end
-
 
   def send(tweets, length, max_length) do
     if (length > 0) do
