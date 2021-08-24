@@ -49,8 +49,8 @@ defmodule Server.PubSubController do
   end
 
   @impl true
-  def handle_cast({:delete_subscriber, topic, subscriber_to_delete}, state) do
-    {:noreply, Enum.filter(state, fn state -> state.subscriber != subscriber_to_delete end)}
+  def handle_cast({:delete_subscriber, topic, subscriber}, state) do
+    {:noreply, Enum.filter(state, fn state -> state.subscriber != subscriber && state.topic == topic end)}
   end
 
   @impl true
