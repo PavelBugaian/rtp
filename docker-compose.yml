@@ -1,6 +1,11 @@
 version: "3.6"
 services:
 
+   mongodb:
+     image: mongo
+     ports:
+       - 27017:27017
+
   twitter_api:
     image: alexburlacu/rtp-server:faf18x
     ports:
