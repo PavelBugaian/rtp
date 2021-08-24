@@ -8,6 +8,10 @@ defmodule Transmitter.ConnectionItem do
     recv(subscriber)
   end
 
+  def drop_connection() do
+    Agent.stop(:shutdown)
+  end
+
   defp parse_options(opts) do
     url = opts[:url]
     subscriber = opts[:subscriber]

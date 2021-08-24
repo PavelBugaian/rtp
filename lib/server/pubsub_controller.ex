@@ -27,6 +27,14 @@ defmodule Server.PubSubController do
     end
   end
 
+  def delete_subscriber(topic, subscriber) do
+    if topic == "tweeter" do
+      Transmitter.ConnectionItem.drop_connection()
+    else
+      GenServer.cast(__MODULE__, {:delete_subscriber, topic, subscriber})
+    end
+  end
+
   def get_all_subscribers() do
     GenServer.cast(__MODULE__, {:get_all_subscribers})
   end
@@ -38,6 +46,11 @@ defmodule Server.PubSubController do
   @impl true
   def handle_cast({:add, topic, subscriber}, state) do
     {:noreply, [%{topic: topic, subscriber: subscriber} | state]}
+  end
+
+  @impl true
+  def handle_cast({:delete_subscriber, topic, subscriber_to_delete}, state) do
+    {:noreply, Enum.filter(state, fn state -> state.subscriber != subscriber_to_delete end)}
   end
 
   @impl true

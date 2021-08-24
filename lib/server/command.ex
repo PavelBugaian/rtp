@@ -5,6 +5,7 @@ defmodule Server.Command do
     case String.split(line, " ", parts: 3) |> Enum.map(fn string -> String.trim(string) end) do
       ["PUBLISH", topic, data] -> {:ok, {:publish, topic, data}}
       ["SUBSCRIBE", topic] -> {:ok, {:subscribe, topic}}
+      ["UNSUBSCRIBE", topic] -> {:ok, {:unsubscribe, topic}}
       _ -> {:error, :unknown_command}
     end
   end
@@ -22,6 +23,12 @@ defmodule Server.Command do
     Server.PubSubController.add_subscriber(topic, socket)
 
     {:ok, "Successfully subscribed to #{topic}\r\n"}
+  end
+
+  def run({:unsubscribe, topic}, socket) do
+    Server.PubSubController.delete_subscriber(topic, socket)
+
+    {:ok, "Successfully unsubscribed from #{topic}\r\n"}
   end
 
 end
